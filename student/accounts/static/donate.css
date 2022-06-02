@@ -1,0 +1,43 @@
+*{	width: 100%;
+    position: relative;
+    font-family: 'roboto', sans-serif;
+    justify-content: center; 
+
+    }
+    
+body{
+    width: 570px;
+    margin: 100px;
+    padding: 30px;
+    background-image: linear-gradient(to right,white,#38ef68); 
+    background-size: cover; 
+
+}
+
+.heading{
+		text-align: center;
+		color: #060c05;
+        font-size: 50px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        
+		}
+
+      
+.form-control{
+        
+           align-items: center;
+           border-radius: 25px;
+           
+           
+       }
+        
+.xy{
+		text-align: left;
+		color: #525249;
+        font-size: medium;
+		}
+        
+.btn{
+            text-align:center;
+		background-color:#ace1af;
+        }

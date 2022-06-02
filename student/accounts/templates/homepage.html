@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'homepage.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Bentham|Playfair+Display|Raleway:400,500|Suranna|Trocchi" rel="stylesheet">
+</head>
+<body background="{% static 'leaf.jpg' %}">
+    <header class="head1">
+        <div class="wrapper">
+            <h1>LEAF NOW</h1>
+            <nav>
+                <ul>
+                    <li><a href="contact">Contact</a></li>
+                    <li><a href="discussion">DISCUSSION</a></li>
+                    <li><a href="login">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="hero-image">
+        <div class="wrapper">
+            <h2><strong>A Portal for Plant Enthusiasts</strong></h2>
+        </div>
+    </div>
+    <div id="features">
+        <div class="wrapper">
+            <ul>
+                <div id="feat1">
+                    <li class="feature-1">
+                    <a href="buy"><img src="{% static 'buy_image.svg' %}" alt="buy"></a>
+                    <a href="buy"><h4>BUY</h4></a>
+                    <p>Browse through a large set of collections here!</p>
+                </div>
+                </li>
+                <li class="feature-2">
+                    <a href="sell"><img src="{% static 'sell_image.svg' %}" alt="sell"></a>
+                    <a href="sell"><h4>SELL</h4></a>
+                    <p>Check out this page for Selling your own products/plants!</p>
+                </li>
+                <li class="feature-3">
+                    <a href="donate"><img src="{% static 'donate_image.svg' %}" alt="donate"></a>
+                    <a href="donate"><h4>DONATE</h4></a>
+                    <p>Donate plants that you do not need here! Or donate towards a good cause! </p>
+                </li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

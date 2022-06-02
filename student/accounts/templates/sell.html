@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Demo Form</title>
+    <script src="https://payments-js.elevate.salesforce.org/elevate-sdk.min.js"></script>
+    <link rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"/>
+      <style>
+        body {
+            background-image: -webkit-linear-gradient(white, rgb(53, 182, 179));
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p></p>
+      <h2>Sell</h2>
+      <div class="row">
+        <div class="col col-lg-5">
+          <form onsubmit="handleForm(event)" class="form">
+            <div class="form-group">
+              <label>Price</label>
+              <input class="form-control" id="amount" name="amount"  value="" required/>
+            </div>
+            <div class="form-group">
+              <label>First Name </label>
+              <input class="form-control" id="firstName" name="firstName" required/>
+            </div>
+            <div class="form-group">
+              <label>Last Name </label>
+              <input class="form-control" id="lastName" name="lastName"required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-control" type="email" id="email" name="email"  required/>  
+            </div>
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+                <label>Upload product image here: </label>
+            </div>
+            <button id="submit" type="submit" value="Upload" class="btn btn-success btn-lg">Upload</button><br><br>
+            <input type="hidden" name="currencyCode" value="USD" />
+            <button id="submit" type="submit" class="btn btn-success btn-lg">
+              Sell Now!
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container"
+      id="captcha-div"
+      style="width:500px;height:500px"
+    ></div>
+    <script>
+      var theme = {
+        fontSize: '16px',
+        color: '#000000de',
+        labelColor: '#0000008a',
+      };
+      var styles = `
+      .cc-number {
+        margin-right: 16px!important;
+      }
+      .exp {
+        margin-right: 16px!important;
+      }
+    `;
+      var merchantId = '<get merchant ID by referring to Payment Services API Integration>';
+      var clientId = '<get client ID by referring to Payment Services API Integration>';
+      var gatewayId = '<get gateway ID by referring to Manage Gateways>';
+      function formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+      }
+      var sfdo = new sfdoPaymentsJsSdk();
+      sfdo.mount({
+        id: 'payments',
+        clientId: clientId,
+        merchantId: merchantId,
+        gatewayId: gatewayId,
+        // Add theme and styles as optional parameters
+        theme: theme,
+        styles: styles,
+      });
+      function handleForm(e) {
+        e.preventDefault();
+        var firstName = document.getElementById('firstName').value;
+        var lastName = document.getElementById('lastName').value;
+        var amount = document.getElementById('amount').value;
+        var email = document.getElementById('email').value;
+        var zip = document.getElementById('zip').value;
+        var nameoncard = firstName + ' ' + lastName;
+        sfdo
+          .createToken({
+            nameOnCard: nameoncard,
+            postalCode: zip, // you can provide zip code here for AVS
+            // captchaV2Id: 'captcha-div' // optionally provide ID of the reCAPTCHA div to use v2
+          })
+          .then(function response(resp) {
+            sfdo
+              .purchase({
+                firstName: firstName,
+                lastName: lastName,
+                amount: amount * 100,
+                currencyCode: 'USD',
+                paymentMethodToken: resp.token,
+                email: email,
+                productMetadataSchemaUri: 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.0.1',
+                productMetadata: {
+                    allocations: [{
+                        id: 'VALID_SALESFORCE_GENERAL_ACCOUNTING_UNIT_ID', 
+                        name: "Name displayed to user.", 
+                        percentage: '100'
+                    }],
+                    donorCoverFee: 50,
+                    campaign: {
+                        id: 'VALID_SALESFORCE_CAMPAIGN_ID',
+                    },
+                    consent: {
+                        message: 'Do you accept marketing emails?',
+                        optIn: true,
+                    },
+                    origin: {
+                        id: 'AN_INTERNAL_ID_FOR_TRACKING',
+                        type: 'THIRD_PARTY_GIVING_PAGE',
+                        displayName: 'My cool donation website',
+                    }
+                }
+              })
+              .then(function(resp) {
+                console.log('Show the user a success message');
+                alert('Thank you for your donation');
+              })
+              .catch(function(resp) {
+                console.error('There was an error creating a donation', resp);
+                alert('There was an error creating a donation');
+              });
+          })
+          .catch(function(err) {
+            console.error('Tokenization Error:', err);
+            alert('Tokenization Error');
+          });
+      }
+    </script>
+  </body>
+</html>
